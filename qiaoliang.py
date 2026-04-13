@@ -8,7 +8,7 @@ import base64
 import plotly.graph_objects as go
 
 # ----------------------
-# 1. 全局配置 + 美化样式
+# 1. 全局配置 + 强制统一样式
 # ----------------------
 warnings.filterwarnings('ignore')
 st.set_page_config(
@@ -18,30 +18,45 @@ st.set_page_config(
     page_icon="🌉"
 )
 
-# 🔥 已修复：强制白色背景，线上线下一致
+# 🔥 最终修复版 CSS —— 标题完全显示 + 图片不变形
 st.markdown("""
     <style>
-    /* 核心修复：强制全局浅色背景 */
     .stApp {
         background-color: #ffffff !important;
         background: #ffffff !important;
+        color: #2d3748 !important;
+        max-width: 100% !important;
+    }
+    .block-container {
+        padding: 1rem 2rem !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
     }
     html, body {
         background-color: #ffffff !important;
         color: #2d3748 !important;
+        font-family: "Microsoft YaHei", SimHei, sans-serif !important;
     }
     * {
         transition: none !important;
         animation: none !important;
+        box-sizing: border-box !important;
     }
+
+    /* 标题修复 */
     .title-custom {
-        font-size: 2.5rem !important;
-        font-weight: 800 !important;
+        font-size: 2.2rem !important;
+        font-weight: 700 !important;
         color: #2d3748 !important;
-        margin-bottom: 20px !important;
-        text-align: center;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        margin: 20px auto !important;
+        text-align: center !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1) !important;
+        font-family: "Microsoft YaHei", SimHei, sans-serif !important;
+        line-height: 1.3 !important;
+        padding: 10px 0 !important;
+        overflow: visible !important;
     }
+
     .stImage img {
         object-fit: contain !important;
         max-height: 220px !important;
@@ -88,13 +103,13 @@ st.markdown("""
         margin-top: 16px;
     }
     .detail-title {
-        font-size: 2.2rem !important;
+        font-size: 1.8rem !important;
         font-weight: 700 !important;
         color: #2d3748 !important;
         margin-bottom: 20px !important;
     }
     .detail-item {
-        font-size: 1.2rem !important;
+        font-size: 1.1rem !important;
         margin-bottom: 12px !important;
         line-height: 1.8 !important;
     }
@@ -106,7 +121,7 @@ st.markdown("""
         border-left: 5px solid #4a5668;
     }
     .dynasty {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         font-weight: bold;
         color: #2d3748;
         margin-bottom: 8px;
@@ -120,17 +135,25 @@ st.markdown("""
         padding: 20px; 
         background:#f8f9fa; 
         border-radius:12px;
+        width: 100% !important;
     }
+
+    /* ✅ 图片彻底修复：不拉伸、不压缩、不变形 */
     .card-img {
         border-radius: 8px;
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 260px !important;
+        object-fit: contain !important;
+        object-position: center !important;
+        background: #f1f3f5 !important;
     }
+
     .card-name {
-        font-size:1.2rem; 
+        font-size:1.1rem; 
         font-weight:bold; 
         margin-top:10px;
+        white-space: normal !important;
     }
     .card-desc {
         font-size:0.9rem; 
@@ -166,7 +189,7 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 图片文件映射（和你项目里的文件名一一对应）
+# 图片文件映射
 bridge_image_map = [
     {"name": "赵州桥", "img": "zhaozhou.jpg", "desc": "世界现存最早敞肩石拱桥"},
     {"name": "安平桥", "img": "anping.jpg", "desc": "古代最长跨海石桥"},
@@ -189,7 +212,7 @@ def get_image_base64(image_path):
         return None
 
 # ----------------------
-# 3. 筛选函数（修复变量名警告）
+# 3. 筛选函数
 # ----------------------
 def filter_data(dynasty_list, category_list, count_range, time_range):
     if not dynasty_list or not category_list:
@@ -205,7 +228,6 @@ def filter_data(dynasty_list, category_list, count_range, time_range):
         (df["朝代排序"] <= time_end)
         ]
     return filtered_df
-
 
 def render_table(dataframe):
     return dataframe[["朝代", "桥名", "品类", "数量", "代表介绍", "经度", "纬度"]]
@@ -266,7 +288,6 @@ if page == "古桥文化简介":
     st.markdown('<div class="title-custom">中国十大名桥</div>', unsafe_allow_html=True)
     st.divider()
 
-    # 第一行5张
     cols1 = st.columns(5)
     for i in range(5):
         with cols1[i]:
@@ -289,7 +310,6 @@ if page == "古桥文化简介":
                 </div>
                 """, unsafe_allow_html=True)
 
-    # 第二行5张
     cols2 = st.columns(5)
     for i in range(5, 10):
         with cols2[i - 5]:
@@ -361,12 +381,11 @@ elif page == "古桥历史沿革":
         {"img": "dumu.jpg", "era": "远古", "name": "独木桥", "desc": "桥梁的雏形，跨越溪流的最原始方式"},
         {"img": "shigong.jpg", "era": "隋代", "name": "石拱桥", "desc": "赵州桥为代表，开启石拱桥的巅峰时代"},
         {"img": "changjianshigong.jpg", "era": "唐代", "name": "大型石桥", "desc": "如宝带桥，长桥如虹，气势恢宏"},
-        {"img": "baodai.jpg", "era": "宋代", "name": "多孔石桥", "desc": "桥梁工程的黄金时代，技术成熟多样"},
-        {"img": "anping.jpg", "era": "宋元", "name": "跨海石桥", "desc": "如安平桥，跨越海湾的宏伟工程"},
+        {"img": "baodai2.jpg", "era": "宋代", "name": "多孔石桥", "desc": "桥梁工程的黄金时代，技术成熟多样"},
+        {"img": "anping2.jpg", "era": "宋元", "name": "跨海石桥", "desc": "如安平桥，跨越海湾的宏伟工程"},
         {"img": "langqiao.jpg", "era": "明清", "name": "廊桥", "desc": "集交通、休憩、文化于一体的建筑艺术"}
     ]
 
-    # 循环渲染卡片
     for row in range(2):
         cols = st.columns(3)
         for i in range(3):
@@ -499,6 +518,7 @@ elif page == "古桥历史沿革":
 - 建造难度：赵州桥敞肩石拱桥设计，工艺难度顶尖
 - 历史影响力：两座均为国宝级文物，历史价值极高
 """)
+
 # ----------------------
 # 页面3：古桥数据可视化
 # ----------------------
@@ -547,7 +567,6 @@ elif page == "古桥数据可视化":
             st_folium(m, width=1000, height=500, returned_objects=[])
         else:
             from folium.plugins import HeatMap
-
             m = folium.Map(location=[32.0, 115.0], zoom_start=5, tiles="CartoDB Positron", scrollWheelZoom=False)
             heat_data = [[row["纬度"], row["经度"], row["数量"]] for _, row in filtered_df.iterrows()]
             HeatMap(heat_data, radius=25, blur=15, min_opacity=0.5).add_to(m)
@@ -562,7 +581,6 @@ elif page == "古桥数据可视化":
     with tab1:
         col1, col2 = st.columns(2)
 
-        # 左：柱状图 → 各类型桥现存数量（精确真实）
         with col1:
             type_data = {
                 "桥类型": ["石拱桥", "梁式石桥", "石拱廊桥", "联孔/联拱石桥",
@@ -579,7 +597,6 @@ elif page == "古桥数据可视化":
             fig_bar.update_layout(title_x=0.5)
             st.plotly_chart(fig_bar, use_container_width=True, config={"displayModeBar": False})
 
-        # 右：饼图 → 各朝代现存桥数量占比（精确真实）
         with col2:
             dynasty_data = {
                 "朝代": ["隋", "唐", "北宋", "金", "清"],
@@ -613,7 +630,6 @@ elif page == "古桥数据可视化":
 
     st.divider()
     st.subheader("📋 古桥详细数据")
-    # 修复后的完整表格数据
     real_bridge_data = pd.DataFrame({
         "朝代": ["隋", "隋", "唐", "北宋", "北宋", "金", "清", "清", "清", "清"],
         "桥名": ["赵州桥", "安平桥", "宝带桥", "洛阳桥", "广济桥", "卢沟桥", "双龙桥", "五亭桥", "八字桥", "霁虹桥"],
