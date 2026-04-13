@@ -18,9 +18,18 @@ st.set_page_config(
     page_icon="🌉"
 )
 
-# 🔥 美化 CSS
+# 🔥 已修复：强制白色背景，线上线下一致
 st.markdown("""
     <style>
+    /* 核心修复：强制全局浅色背景 */
+    .stApp {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+    }
+    html, body {
+        background-color: #ffffff !important;
+        color: #2d3748 !important;
+    }
     * {
         transition: none !important;
         animation: none !important;
