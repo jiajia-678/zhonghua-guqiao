@@ -18,9 +18,10 @@ st.set_page_config(
     page_icon="🌉"
 )
 
-# 🔥 最终修复版 CSS —— 标题完全显示 + 图片不变形
+# 🔥 最终修复版 CSS —— 字体正常 + 背景统一 + 图片不变形
 st.markdown("""
     <style>
+    /* 全局背景统一为纯白色 */
     .stApp {
         background-color: #ffffff !important;
         background: #ffffff !important;
@@ -43,7 +44,24 @@ st.markdown("""
         box-sizing: border-box !important;
     }
 
-    /* 标题修复 */
+    /* 修复侧边栏字体显示 + 背景统一 */
+    [data-testid="stSidebar"] {
+        background-color: #f8f9fa !important;
+        color: #2d3748 !important;
+    }
+    [data-testid="stSidebar"] * {
+        color: #2d3748 !important;
+        font-size: 1rem !important;
+        font-weight: normal !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    [data-testid="stSidebar"] .stRadio label {
+        font-size: 1rem !important;
+        color: #2d3748 !important;
+    }
+
+    /* 标题样式 */
     .title-custom {
         font-size: 2.2rem !important;
         font-weight: 700 !important;
@@ -67,6 +85,7 @@ st.markdown("""
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
         overflow: hidden !important;
         width: 100% !important;
+        background: #ffffff !important;
     }
     .stDataFrame th {
         background-color: #4a5668 !important;
@@ -92,9 +111,7 @@ st.markdown("""
         height: 3rem !important;
         font-size: 1.1rem !important;
     }
-    [data-testid="stSidebar"] {
-        background-color: #f8f9fa !important;
-    }
+
     .detail-card {
         background-color: #f9fafb;
         padding: 24px;
@@ -138,7 +155,7 @@ st.markdown("""
         width: 100% !important;
     }
 
-    /* ✅ 图片彻底修复：不拉伸、不压缩、不变形 */
+    /* 图片样式：不拉伸、不变形 */
     .card-img {
         border-radius: 8px;
         width: 100% !important;
