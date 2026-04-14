@@ -18,13 +18,26 @@ st.set_page_config(
     page_icon="🌉"
 )
 
-# 🔥 最终修复版 CSS —— 字体正常 + 背景统一 + 图片不变形
+# 🔥 锁死白色主题，线上线下完全一致
 st.markdown("""
     <style>
-    /* 全局背景统一为纯白色 */
-    .stApp {
+    /* 全局强制纯白背景，禁止深色模式 */
+    :root {
+        --background-color: #ffffff !important;
+        --text-color: #2d3748 !important;
+    }
+    [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
         background: #ffffff !important;
+    }
+    [data-testid="stHeader"] {
+        background-color: #ffffff !important;
+    }
+    [data-testid="stToolbar"] {
+        background-color: #ffffff !important;
+    }
+    .stApp {
+        background-color: #ffffff !important;
         color: #2d3748 !important;
         max-width: 100% !important;
     }
@@ -42,9 +55,10 @@ st.markdown("""
         transition: none !important;
         animation: none !important;
         box-sizing: border-box !important;
+        color: #2d3748 !important;
     }
 
-    /* 修复侧边栏字体显示 + 背景统一 */
+    /* 侧边栏强制浅色 */
     [data-testid="stSidebar"] {
         background-color: #f8f9fa !important;
         color: #2d3748 !important;
@@ -53,12 +67,6 @@ st.markdown("""
         color: #2d3748 !important;
         font-size: 1rem !important;
         font-weight: normal !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    [data-testid="stSidebar"] .stRadio label {
-        font-size: 1rem !important;
-        color: #2d3748 !important;
     }
 
     /* 标题样式 */
@@ -105,6 +113,7 @@ st.markdown("""
         padding: 12px 15px !important;
         text-align: center !important;
         white-space: nowrap !important;
+        color: #2d3748 !important;
     }
     .stButton>button {
         border-radius: 8px !important;
@@ -155,7 +164,6 @@ st.markdown("""
         width: 100% !important;
     }
 
-    /* 图片样式：不拉伸、不变形 */
     .card-img {
         border-radius: 8px;
         width: 100% !important;
@@ -171,10 +179,16 @@ st.markdown("""
         font-weight:bold; 
         margin-top:10px;
         white-space: normal !important;
+        color: #2d3748 !important;
     }
     .card-desc {
         font-size:0.9rem; 
-        color:#666;
+        color:#666 !important;
+    }
+
+    /* 强制 Plotly 图表白色背景，不随主题变化 */
+    .js-plotly-plot, .plotly-graph-div {
+        background-color: #ffffff !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -523,7 +537,9 @@ elif page == "古桥历史沿革":
             xanchor="center"
         ),
         margin=dict(l=40, r=40, t=40, b=40),
-        height=500
+        height=500,
+        paper_bgcolor="white",  # 强制白色
+        plot_bgcolor="white"
     )
     st.plotly_chart(fig_radar, width="stretch", config={"displayModeBar": False})
 
@@ -611,7 +627,7 @@ elif page == "古桥数据可视化":
                              color="现存数量",
                              height=400,
                              title="中国古桥各类型现存数量（座）")
-            fig_bar.update_layout(title_x=0.5)
+            fig_bar.update_layout(title_x=0.5, paper_bgcolor="white", plot_bgcolor="white")
             st.plotly_chart(fig_bar, use_container_width=True, config={"displayModeBar": False})
 
         with col2:
@@ -626,7 +642,7 @@ elif page == "古桥数据可视化":
                              height=400,
                              hole=0.3,
                              title="中国古桥各朝代现存数量占比")
-            fig_pie.update_layout(title_x=0.5)
+            fig_pie.update_layout(title_x=0.5, paper_bgcolor="white", plot_bgcolor="white")
             st.plotly_chart(fig_pie, use_container_width=True, config={"displayModeBar": False})
 
     with tab2:
