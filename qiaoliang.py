@@ -562,7 +562,8 @@ elif page == "古桥数据可视化":
         (1, 1),
         time_range
     )
-    st.markdown('<div class="title-custom">中华古桥：全国古桥数据可视化</div>', unsafe_allow_html=True)
+    # 🔥 已修改：全国 → 中国
+    st.markdown('<div class="title-custom">中华古桥：中国古桥数据可视化</div>', unsafe_allow_html=True)
     st.divider()
 
     col1, col2, col3 = st.columns(3)
